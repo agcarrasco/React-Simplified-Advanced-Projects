@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   getMonth,
   getYear,
@@ -44,7 +45,9 @@ function getMonthData(date) {
 }
 
 export function Calendar({ value: currentDate, onChange }) {
-  const currentMonth = getMonthData(currentDate);
+  const [currentMonth, setCurrentMonth] = useState(() =>
+    getMonthData(currentDate)
+  );
 
   const currentMonthDays = createDays(
     currentMonth.year,
@@ -53,7 +56,7 @@ export function Calendar({ value: currentDate, onChange }) {
     1
   );
 
-  const prevMonth = getMonthData(subMonths(currentDate, 1));
+  const prevMonth = getMonthData(subMonths(currentMonth.firstDate, 1));
   let prevMonthDays = [];
   // if current month does not start on a Sunday,
   // get first sunday of the week
@@ -69,11 +72,11 @@ export function Calendar({ value: currentDate, onChange }) {
     );
   }
 
-  const nextMonth = getMonthData(addMonths(currentDate, 1));
+  const nextMonth = getMonthData(addMonths(currentMonth.firstDate, 1));
   let nextMonthDays = [];
-  // if next month does not start on a Sunday,
+  // if current month does not end on a Saturday,
   // get last day of the week for the current month
-  if (nextMonth.firstDay !== 0) {
+  if (currentMonth.lastDay !== 6) {
     const lastDayDate = getDate(lastDayOfWeek(currentMonth.lastDate));
     nextMonthDays = createDays(nextMonth.year, nextMonth.month, lastDayDate, 1);
   }
@@ -81,12 +84,26 @@ export function Calendar({ value: currentDate, onChange }) {
   return (
     <div className="date-picker">
       <div className="date-picker-header">
-        <button className="prev-month-button month-button">&larr;</button>
+        <button
+          className="prev-month-button month-button"
+          onClick={() => {
+            setCurrentMonth(getMonthData(subMonths(currentMonth.firstDate, 1)));
+          }}
+        >
+          &larr;
+        </button>
         <div className="current-month">{`${format(
-          currentDate,
+          currentMonth.firstDate,
           "MMMM - yyyy"
         )}`}</div>
-        <button className="next-month-button month-button">&rarr;</button>
+        <button
+          className="next-month-button month-button"
+          onClick={() => {
+            setCurrentMonth(getMonthData(addMonths(currentMonth.firstDate, 1)));
+          }}
+        >
+          &rarr;
+        </button>
       </div>
       <div className="date-picker-grid-header date-picker-grid">
         <div>Sun</div>

@@ -12,7 +12,7 @@ export function DatePicker({ value, onChange }) {
     <div className="date-picker-container">
       <button
         className="date-picker-button"
-        onClick={() => setShowCalendar(true)}
+        onClick={() => setShowCalendar(!showCalendar)}
       >
         {formattedDate}
       </button>
