@@ -8,6 +8,7 @@ import {
   addMonths,
   getDay,
   isSameDay,
+  isToday,
   previousSunday,
   getDate,
   lastDayOfWeek,
@@ -117,12 +118,11 @@ export function Calendar({ value: currentDate, onChange }) {
       <div className="date-picker-grid-dates date-picker-grid">
         {prevMonthDays.map(({ value, day }) => (
           <button
-            className={
-              isSameDay(currentDate, value)
-                ? "date date-picker-other-month-date selected"
-                : "date date-picker-other-month-date"
-            }
+            className={`date date-picker-other-month-date ${
+              isSameDay(currentDate, value) && "selected"
+            } ${isToday(value) && "today"}`}
             key={day}
+            onClick={() => onChange(value)}
           >
             {day}
           </button>
@@ -130,7 +130,9 @@ export function Calendar({ value: currentDate, onChange }) {
 
         {currentMonthDays.map(({ value, day }) => (
           <button
-            className={isSameDay(currentDate, value) ? "date selected" : "date"}
+            className={`date ${isSameDay(currentDate, value) && "selected"} ${
+              isToday(value) && "today"
+            }`}
             key={day}
             onClick={() => onChange(value)}
           >
@@ -140,12 +142,11 @@ export function Calendar({ value: currentDate, onChange }) {
 
         {nextMonthDays.map(({ value, day }) => (
           <button
-            className={
-              isSameDay(currentDate, value)
-                ? "date date-picker-other-month-date selected"
-                : "date date-picker-other-month-date"
-            }
+            className={`date date-picker-other-month-date ${
+              isSameDay(currentDate, value) && "selected"
+            } ${isToday(value) && "today"}`}
             key={day}
+            onClick={() => onChange(value)}
           >
             {day}
           </button>
